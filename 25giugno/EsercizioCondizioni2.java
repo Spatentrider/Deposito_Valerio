@@ -83,6 +83,8 @@ public class EsercizioCondizioni2 {
                 prezzofinale = (int)(prezzofinale * 1.50);
                 break;
         }
+        //controllo idoneità
+        
         if(idoneità == true){
         System.out.println("prezzo assicurazione è : " + prezzofinale);}
         else{
