@@ -77,6 +77,5 @@ public class UltimoEsercizioOggetti {
         }while(!input.equals("no"));//se input = no esce dal ciclo
         //stampa di uscita 
         System.out.println("Programma terminato");
-        Officina.targa = "sjjs";
     }
 }
