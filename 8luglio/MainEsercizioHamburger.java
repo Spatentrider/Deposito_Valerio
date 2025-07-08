@@ -11,6 +11,15 @@ public class MainEsercizioHamburger {
 
         //Creazione oggetto subject
         OrdiniSingleton gestore = OrdiniSingleton.getInstance();
+        OrdiniSingleton gestore2 = OrdiniSingleton.getInstance();
+
+        // Verifica che sia la stessa istanza
+        if (gestore.equals(gestore2)) {
+            System.out.println("Le istanze sono uguali");
+        } else {
+            System.out.println("Le istanze sono diverse");
+        }
+
         //aggiunta clienti a gestore
         gestore.aggiungiOsservatore(cliente1);
         gestore.aggiungiOsservatore(cliente2);
@@ -18,11 +27,13 @@ public class MainEsercizioHamburger {
         //metodo di notifica a observer
         gestore.nuovoOrdine(burger);
 
+        //aggiunto primo decorator
         burger = new FormaggioDecorator(burger);
 
         //metodo di notifica a observer
         gestore.nuovoOrdine(burger);
 
+        //aggiunto secondo decorator
         burger = new BaconDecorator(burger);
 
         //metodo di notifica a observer
@@ -31,3 +42,4 @@ public class MainEsercizioHamburger {
     }
     
 }
+
