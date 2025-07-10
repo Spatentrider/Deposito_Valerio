@@ -11,21 +11,18 @@ public class EsercizioFactoryMethodMain {
             System.out.print("Inserisci tipo veicolo (auto, moto, camion) o 'esci' per terminare: ");
             tipo = scanner.nextLine();
 
-            //creazione oggetto factory
-            VeicoloFactory factory = null;
-
             switch (tipo) {
                 case "auto"://creazione Auto e chiamata metodi
-                    factory = new AutoCreator();
+                    VeicoloFactory factory = new AutoCreator();
                     factory.usaVeicolo(tipo);
                     break;
                 case "moto"://creazione Moto e chiamata metodi
-                    factory = new MotoCreator();
-                    factory.usaVeicolo(tipo);
+                    VeicoloFactory factory2 = new MotoCreator();
+                    factory2.usaVeicolo(tipo);
                     break;
                 case "camion"://creazione Camion e chiamata metodi
-                    factory = new CamionCreator();
-                    factory.usaVeicolo(tipo);
+                    VeicoloFactory factory3 = new CamionCreator();
+                    factory3.usaVeicolo(tipo);
                     break;
                 case "esci":
                     System.out.println("Uscita dal programma");
