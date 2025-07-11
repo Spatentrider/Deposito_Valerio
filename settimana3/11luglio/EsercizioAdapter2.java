@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// ====================== INTERFACCIA ======================
+//interfaccia
 interface UserManagement {
     void createUser(String name);
     void deleteUser(String name);
     void findUser(String name);
 }
 
-// ====================== MODEL ======================
+//classe Utente
 class User {
     private String name;
 
@@ -21,38 +21,38 @@ class User {
     }
 }
 
-// ====================== STRATEGY ======================
+//interfaccia Strategy
 interface SearchStrategy {
     User search(String name, ArrayList<User> users);
 }
-
+//strategia per cercare utente base
 class SimpleSearch implements SearchStrategy {
     public User search(String name, ArrayList<User> users) {
         for (User user : users) {
             if (user.getName().equals(name)) {
-                System.out.println("Strategy: Simple search found " + name);
+                System.out.println("Utente trovato tramite ricerca semplice" + name);
                 return user;
             }
         }
-        System.out.println("Strategy: Simple search did not find " + name);
+        System.out.println("Utente non trovato");
         return null;
     }
 }
-
+//strategia per cercare utente caseIsensitive
 class CaseInsensitiveSearch implements SearchStrategy {
     public User search(String name, ArrayList<User> users) {
         for (User user : users) {
             if (user.getName().equalsIgnoreCase(name)) {
-                System.out.println("Strategy: Case-insensitive search found " + name);
+                System.out.println("Utente trovato tramite ricerca case insensitive " + name);
                 return user;
             }
         }
-        System.out.println("Strategy: Case-insensitive search did not find " + name);
+        System.out.println("Utente non trovato");
         return null;
     }
 }
 
-// ====================== LEGACY SYSTEM ======================
+//classe Legacy da adattare
 class LegacyUserSystem {
     ArrayList<User> users = new ArrayList<>();
     private SearchStrategy searchStrategy = new SimpleSearch(); // Default strategy
@@ -76,14 +76,16 @@ class LegacyUserSystem {
     }
 }
 
-// ====================== ADAPTER ======================
+//classe Adapter
 class UserManagementAdapter implements UserManagement {
     private LegacyUserSystem legacySystem;
 
+    //costruttore con parametro oggetto Legacy
     public UserManagementAdapter(LegacyUserSystem legacySystem) {
         this.legacySystem = legacySystem;
     }
 
+    //metodi per creare, cancellare e cercare Utente
     public void createUser(String name) {
         legacySystem.addUser(new User(name));
     }
@@ -97,44 +99,62 @@ class UserManagementAdapter implements UserManagement {
     }
 }
 
-// ====================== FACADE ======================
+//classe Facade  per gestire menu con input utente
 class UserManagementFacade {
+    //creazione oggetti Scanner , Legacy e adapter
     private Scanner scanner = new Scanner(System.in);
     private UserManagement userManagement;
     private LegacyUserSystem legacySystem;
 
+    //costruttore con parametri
     public UserManagementFacade(UserManagement userManagement, LegacyUserSystem legacySystem) {
         this.userManagement = userManagement;
         this.legacySystem = legacySystem;
     }
 
+    //metodo per gestire menu
     public void avviaMenu() {
         String input;
         do {
-            System.out.println("\nComandi disponibili: create, delete, find, strategy, esci");
+            System.out.println("Comandi disponibili: create, delete, find, strategy, esci");
             System.out.print("Inserisci comando: ");
-            input = scanner.nextLine().toLowerCase();
+            input = scanner.nextLine();
 
             switch (input) {
-                case "esci" -> {
+                case "esci":
                     System.out.println("Chiusura programma.");
                     return;
-                }
-                case "create", "delete", "find" -> {
+
+                case "create":
+                case "delete":
+                case "find":
+                    //prende nome utente e chiamata metodi create, delete o find dell'adapter
                     System.out.print("Inserisci nome utente: ");
                     String nomeUtente = scanner.nextLine();
                     switch (input) {
-                        case "create" -> userManagement.createUser(nomeUtente);
-                        case "delete" -> userManagement.deleteUser(nomeUtente);
-                        case "find" -> userManagement.findUser(nomeUtente);
+                        case "create":
+                            userManagement.createUser(nomeUtente);
+                            break;
+                        case "delete":
+                            userManagement.deleteUser(nomeUtente);
+                            break;
+                        case "find":
+                            userManagement.findUser(nomeUtente);
+                            break;
                     }
-                }
-                case "strategy" -> scegliStrategia();
-                default -> System.out.println("Comando non riconosciuto.");
+                    break;
+
+                case "strategy"://case per cambiare strategia del find
+                    scegliStrategia();
+                    break;
+
+                default:
+                    System.out.println("Comando non riconosciuto.");
             }
         } while (true);
     }
 
+    //metodo per scegliere strategyy con input
     private void scegliStrategia() {
         System.out.println("Strategie disponibili:");
         System.out.println("1. SimpleSearch");
@@ -142,10 +162,14 @@ class UserManagementFacade {
         System.out.print("Scegli una strategia (1 o 2): ");
         String scelta = scanner.nextLine();
         switch (scelta) {
-            case "1" -> legacySystem.setSearchStrategy(new SimpleSearch());
-            case "2" -> legacySystem.setSearchStrategy(new CaseInsensitiveSearch());
-            default -> System.out.println("Scelta non valida. Strategia invariata.");
+            case "1"://imposta find con strategia base
+                legacySystem.setSearchStrategy(new SimpleSearch());
+                break;
+            case "2"://imposta find con strategia case insensitive
+                legacySystem.setSearchStrategy(new CaseInsensitiveSearch());
+                break;
+            default:
+                System.out.println("Scelta non valida. Strategia invariata.");
         }
     }
 }
-
